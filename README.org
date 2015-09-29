@@ -1,0 +1,51 @@
+* Docker image for running Moodle
+
+This docker image installs the latest moodle and serves it via Apache server. It has to be linked to docker container running Postgresql server.
+
+**Warning**: This container is not suitable for production as is.
+
+** Usage
+First run the Postgresql server 
+#+BEGIN_SRC bash
+docker run --name postgres  -e POSTGRES_PASSWORD=passmoodle -e POSTGRES_USER=moodle -d postgres
+#+END_SRC
+
+Then attach the postgres container via *--link* to moodle container
+
+#+BEGIN_SRC bash
+docker run --name moodle -e WWWROOT=localhost --link postgres:db -d -p 80:80 mrcinv/moodle
+#+END_SRC
+
+and visit *http://localhost* to configure moodle site.
+
+** Persistance
+
+Docker containers have no persistence. If you want to have a persitant moodle instance, you have to attach VOLUMES */moodledata* for moodle container and 
+*/var/lib/postgresql* for postgres container.
+
+#+BEGIN_SRC bash
+export DB_DATA = /path/to/dbdata
+export MOODLEDATA=/path/to/moodledata
+#+END_SRC
+
+#+BEGIN_SRC bash
+docker run --name postgres -v $DB_DATA:/var/lib/postgresql/data -e POSTGRES_PASSWORD=passmoodle -e POSTGRES_USER=moodle -d mrcinv/postgres
+docker run --name moodle -v $MOODLEDATA:/moodledata --link postgres:db -d -p 80:80 mrcinv/moodle
+#+END_SRC
+
+and the database data will persist in */path/to/dbdata*, while moodle files will be in */path/to/moodledata*.
+
+** Backup and restore
+
+To make a backup of the database, we can use *docker exec* command
+
+#+BEGIN_SRC bash
+docker exec -u postgres postgres pg_dump $POSTGRES_USER | bzip2 -z > moodle-database.sql.bz2
+#+END_SRC
+
+The restore is similar 
+#+BEGIN_SRC bash
+bzcat moodle-database.sql.bz2 | docker exec -i -u postgres psql -d $POSTGRES_USER 
+#+END_SRC
+
+
