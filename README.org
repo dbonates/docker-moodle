@@ -7,7 +7,7 @@ This docker image installs the latest moodle and serves it via Apache server. It
 ** Usage
 First run the Postgresql server 
 #+BEGIN_SRC bash
-docker run --name postgres  -e POSTGRES_PASSWORD=passmoodle -e POSTGRES_USER=moodle -d postgres
+docker run --name postgres  -e POSTGRES_PASSWORD=passmoodle -e POSTGRES_USER=moodle -d mrcinv/postgres
 #+END_SRC
 
 Then attach the postgres container via *--link* to moodle container
