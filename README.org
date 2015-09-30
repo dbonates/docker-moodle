@@ -29,7 +29,7 @@ export MOODLEDATA=/path/to/moodledata
 #+END_SRC
 
 #+BEGIN_SRC bash
-docker run --name postgres -v $DB_DATA:/var/lib/postgresql/data -e POSTGRES_PASSWORD=passmoodle -e POSTGRES_USER=moodle -d mrcinv/postgres
+docker run --name postgres -v $DB_DATA:/var/lib/postgresql -e POSTGRES_PASSWORD=passmoodle -e POSTGRES_USER=moodle -d mrcinv/postgres
 docker run --name moodle -v $MOODLEDATA:/moodledata --link postgres:db -d -p 80:80 mrcinv/moodle
 #+END_SRC
 
@@ -48,4 +48,13 @@ The restore is similar
 bzcat moodle-database.sql.bz2 | docker exec -i -u postgres psql -d $POSTGRES_USER 
 #+END_SRC
 
+** Docker compose
+
+To simplify runing two separate Docker containers, one can use *Docker Compose*. The included file [[file:docker-compose.yml][docker-compose.yml]] describes the volumes and links between containers. Edit config file and run
+
+#+BEGIN_SRC bash
+read POSTGRES_PASSWORD
+docker-compose up -d
+docker-compose ps
+#+END_SRC
 
