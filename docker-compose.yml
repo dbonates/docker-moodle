@@ -1,0 +1,13 @@
+moodle:
+  build: moodle
+  ports:
+   - "80:80"
+  links:
+   - db
+db:
+  image: mrcinv/postgres
+  environment:
+   - POSTGRES_PASSWORD
+   - POSTGRES_USER=moodle
+  volumes:
+   - ./moodle-db:/var/lib/postgresql
