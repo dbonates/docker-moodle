@@ -6,7 +6,7 @@ VOLUME ["/moodledata"]
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get -y install php5-mcrypt php5-gd php5-curl php5-xmlrpc php5-intl php5-pgsql php5-ldap git
 # clone moodle to /var/www/html dir
-RUN rm -rf /app && cd / && git clone --depth=1 -b MOODLE_29_STABLE git://git.moodle.org/moodle.git /app
+RUN rm -rf /app && cd / && git clone --depth=1 -b MOODLE_31_STABLE git://git.moodle.org/moodle.git /app
 
 # copy config.php
 #RUN chmod -R 0755 /app
